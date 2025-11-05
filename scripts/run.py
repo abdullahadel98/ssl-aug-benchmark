@@ -3,16 +3,17 @@
 Thin wrapper around vturrisi/solo-learn main_pretrain.py.
 
 - Works both on Kaggle and locally.
-- Lets you pass ANY solo-learn flag unchanged (Hydra or argparse).
-- Auto-sets data dir and working dir if you don't specify them.
+- Lets you pass ANY solo-learn Hydra config override unchanged.
+- Auto-sets checkpoint and output directories if you don't specify them.
 - Calls the repo's main_pretrain.py via subprocess (no import changes).
 
-Usage examples (see bottom or README):
-  python run_solo_pretrain.py --repo_dir /kaggle/input/solo-learn \
-      -- extra method=simclr data.dataset=cifar10 trainer.max_epochs=100 optimizer.batch_size=256
+Usage examples:
+  python scripts/run.py --repo_dir ./learning/solo-learn \
+      -- --config-path scripts/pretrain/cifar/ --config-name simclr.yaml \
+         name="simclr-cifar100" data.dataset=cifar100
 
-  python run_solo_pretrain.py --repo_dir /kaggle/input/solo-learn \
-      -- --dataset cifar10 --backbone resnet18 --max_epochs 100 --batch_size 256 --method simclr
+Note: main_pretrain.py uses Hydra exclusively, so all overrides must be in Hydra format
+(e.g., checkpoint.dir=/path, data.dataset=cifar100, not --checkpoint_dir or --dataset).
 """
 import os
 import sys
@@ -71,21 +72,22 @@ def main():
     cmd_parts = [py, str(entry)]
 
     # We *optionally* inject defaults ONLY if user didn't already pass an explicit value.
-    # Works for both legacy argparse flags (e.g., --data_dir) and Hydra keys (data.data_dir=...).
+    # main_pretrain.py uses Hydra exclusively, so we only support Hydra-style overrides.
     forwarded = " ".join(args.solo_args)
 
     def not_in_forwarded(substrs):
         return all(s not in forwarded for s in substrs)
 
-    # data dir default
-    if not_in_forwarded(["--data_dir", "data.data_dir="]):
-        cmd_parts += ["--data_dir", str(data_dir)]
+    # checkpoint dir default (Hydra-style: checkpoint.dir=...)
+    if not_in_forwarded(["checkpoint.dir="]):
+        cmd_parts += [f"checkpoint.dir={work_dir / 'checkpoints'}"]
 
-    # sensible default for checkpoints/logs if not provided
-    if not_in_forwarded(["--checkpoint_dir", "paths.checkpoint_dir="]):
-        cmd_parts += ["--checkpoint_dir", str(work_dir / "checkpoints")]
-    if not_in_forwarded(["--log_dir", "paths.log_dir="]):
-        cmd_parts += ["--log_dir", str(work_dir / "logs")]
+    # Hydra output directory (optional, but helps organize outputs)
+    if not_in_forwarded(["hydra.run.dir="]):
+        cmd_parts += [f"hydra.run.dir={work_dir / 'hydra_outputs'}"]
+
+    # Note: data.train_path is dataset-specific and usually set in config files,
+    # so we don't auto-set it here. Users should override it in their config or via Hydra.
 
     # device/mixed precision are handled by solo-learn (Lightning/Hydra) if you pass them.
     # We don't override—keep wrapper thin and version-proof.
