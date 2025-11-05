@@ -8,5 +8,5 @@ python3 scripts/run.py --repo_dir ./learning/solo-learn \
   -- \
   --config-path scripts/pretrain/cifar/ \
   --config-name simclr.yaml \
-  name="simclr-cifar100" \
-  data.dataset=cifar100
+  ++name="simclr-cifar100" \
+  ++data.dataset=cifar100
