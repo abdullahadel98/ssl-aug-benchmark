@@ -71,32 +71,56 @@ def main():
     py = detect_python()
     cmd_parts = [py, str(entry)]
 
-    # We *optionally* inject defaults ONLY if user didn't already pass an explicit value.
-    # main_pretrain.py uses Hydra exclusively, so we only support Hydra-style overrides.
-    forwarded = " ".join(args.solo_args)
+    # Parse forwarded args to separate Hydra flags from overrides
+    if args.solo_args:
+        # If the first is a literal "--", drop it (common in argparse remainder)
+        cleaned = args.solo_args[1:] if args.solo_args[0] == "--" else args.solo_args
+    else:
+        cleaned = []
+
+    # Separate Hydra flags (--config-path, --config-name) from overrides (key=value)
+    hydra_flags = []
+    overrides = []
+    
+    i = 0
+    while i < len(cleaned):
+        arg = cleaned[i]
+        # Check if it's a Hydra flag (starts with --)
+        if arg.startswith("--"):
+            hydra_flags.append(arg)
+            # Some flags like --config-path take a value
+            if arg in ["--config-path", "--config-name"] and i + 1 < len(cleaned):
+                hydra_flags.append(cleaned[i + 1])
+                i += 2
+                continue
+            i += 1
+        else:
+            # It's an override (key=value format)
+            overrides.append(arg)
+            i += 1
+
+    # Add Hydra flags first (required to come before overrides)
+    cmd_parts.extend(hydra_flags)
+
+    # Check forwarded args for existing overrides
+    forwarded_overrides = " ".join(overrides)
 
     def not_in_forwarded(substrs):
-        return all(s not in forwarded for s in substrs)
+        return all(s not in forwarded_overrides for s in substrs)
 
     # checkpoint dir default (Hydra-style: checkpoint.dir=...)
     if not_in_forwarded(["checkpoint.dir="]):
-        cmd_parts += [f"checkpoint.dir={work_dir / 'checkpoints'}"]
+        overrides.insert(0, f"checkpoint.dir={work_dir / 'checkpoints'}")
 
     # Hydra output directory (optional, but helps organize outputs)
     if not_in_forwarded(["hydra.run.dir="]):
-        cmd_parts += [f"hydra.run.dir={work_dir / 'hydra_outputs'}"]
+        overrides.insert(0, f"hydra.run.dir={work_dir / 'hydra_outputs'}")
 
     # Note: data.train_path is dataset-specific and usually set in config files,
     # so we don't auto-set it here. Users should override it in their config or via Hydra.
 
-    # device/mixed precision are handled by solo-learn (Lightning/Hydra) if you pass them.
-    # We don't override—keep wrapper thin and version-proof.
-
-    # Finally add the raw solo-learn args (after a lone "--", Jupyter strips it; argparse keeps it in solo_args already)
-    if args.solo_args:
-        # If the first is a literal "--", drop it (common in argparse remainder)
-        cleaned = args.solo_args[1:] if args.solo_args[0] == "--" else args.solo_args
-        cmd_parts += cleaned
+    # Add all overrides (user-provided + defaults)
+    cmd_parts.extend(overrides)
 
     cmd = " ".join(shlex.quote(x) for x in cmd_parts)
 
