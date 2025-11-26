@@ -1,0 +1,73 @@
+# augmentations/dino_imagenet_multicrop.yaml
+
+# Global crop 1 (strong blur, no solarization)
+- rrc:
+    enabled: True
+    crop_min_scale: 0.25   # DINO: [0.25, 1.0] for global crops
+    crop_max_scale: 1.0
+  color_jitter:
+    prob: 0.8
+    brightness: 0.4
+    contrast: 0.4
+    saturation: 0.2
+    hue: 0.1
+  grayscale:
+    prob: 0.2
+  gaussian_blur:
+    prob: 1.0            # strong blur on first global crop
+  solarization:
+    prob: 0.0
+  equalization:
+    prob: 0.0
+  horizontal_flip:
+    prob: 0.5
+  crop_size: 224
+  num_crops: 1
+
+# Global crop 2 (weak blur, with solarization)
+- rrc:
+    enabled: True
+    crop_min_scale: 0.25
+    crop_max_scale: 1.0
+  color_jitter:
+    prob: 0.8
+    brightness: 0.4
+    contrast: 0.4
+    saturation: 0.2
+    hue: 0.1
+  grayscale:
+    prob: 0.2
+  gaussian_blur:
+    prob: 0.1            # weaker blur on second global crop
+  solarization:
+    prob: 0.2            # enabled for second global crop
+  equalization:
+    prob: 0.0
+  horizontal_flip:
+    prob: 0.5
+  crop_size: 224
+  num_crops: 1
+
+# Local crops (smaller, intermediate blur, no solarization)
+- rrc:
+    enabled: True
+    crop_min_scale: 0.05   # DINO locals: [0.05, 0.25]
+    crop_max_scale: 0.25
+  color_jitter:
+    prob: 0.8
+    brightness: 0.4
+    contrast: 0.4
+    saturation: 0.2
+    hue: 0.1
+  grayscale:
+    prob: 0.2
+  gaussian_blur:
+    prob: 0.5             # typical choice for local crops
+  solarization:
+    prob: 0.0
+  equalization:
+    prob: 0.0
+  horizontal_flip:
+    prob: 0.5
+  crop_size: 96
+  num_crops: 10           # 2 global + 10 local = 12 crops total

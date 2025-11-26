@@ -1,0 +1,153 @@
+# byol_cifar10_resnet18.yaml
+# BYOL on CIFAR-10, solo-learn style, faithful to BYOL paper where possible.
+
+defaults:
+  - _self_
+  - augmentations: asymmetric_byol_og.yaml
+  - wandb: private.yaml
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+name: "byol-cifar10-resnet18"
+method: "byol"
+
+backbone:
+  # lighter backbone for CIFAR
+  name: "resnet18"
+
+method_kwargs:
+  # BYOL: 2-layer MLP projector and predictor
+  # hidden dim 4096, output dim 256 (paper values)
+  proj_hidden_dim: 4096
+  proj_output_dim: 256
+  pred_hidden_dim: 4096
+
+momentum:
+  # BYOL EMA momentum: base_tau ≈ 0.996, increases towards 1.0
+  base_tau: 0.996
+  final_tau: 1.0
+
+data:
+  dataset: "cifar10"
+  # solo-learn expects cifar10 to be downloaded automatically if data_dir is given
+  data_dir: "/path/to/cifar10"   # change this to where you want CIFAR stored
+  format: "cifar"
+  num_workers: 8
+
+optimizer:
+  name: "lars"
+  # practical batch size for a single GPU; adjust to your HW
+  batch_size: 512
+  # BYOL LR rule: lr = 0.2 * (batch_size / 256)
+  lr: 0.4            # 0.2 * (512 / 256)
+  classifier_lr: 0.1
+  weight_decay: 1.5e-6   # BYOL paper value
+  kwargs:
+    clip_lr: True
+    eta: 0.02
+    exclude_bias_n_norm: True
+
+scheduler:
+  name: "warmup_cosine"
+  warmup_epochs: 10
+
+checkpoint:
+  enabled: True
+  dir: "trained_models/byol_cifar10_resnet18"
+  frequency: 10
+
+auto_resume:
+  enabled: True
+
+max_epochs: 800          # shorter than ImageNet (1000), but still long SSL pretrain
+devices: [0]             # adjust for multi-GPU
+sync_batchnorm: True
+accelerator: "gpu"
+strategy: "ddp"          # or "auto" / "ddp_find_unused_parameters_false"
+precision: 16-mixed
+
+
+# # byol_resnet50_imagenet.yaml
+# # Solo-learn BYOL config approximating the original BYOL paper (ImageNet-1k).
+
+# defaults:
+#   - _self_
+#   - augmentations: asymmetric_imagenet.yaml   # see second block below
+#   - wandb: private.yaml
+#   - override hydra/hydra_logging: disabled
+#   - override hydra/job_logging: disabled
+
+# # disable hydra outputs
+# hydra:
+#   output_subdir: null
+#   run:
+#     dir: .
+
+# name: "byol-imagenet-resnet50"
+# method: "byol"
+
+# backbone:
+#   # original BYOL uses ResNet-50 (×1 width) as the main reference model
+#   # Grill et al., 2020
+#   name: "resnet50"
+
+# method_kwargs:
+#   # projector: 2-layer MLP with hidden dim 4096, output dim 256
+#   # predictor: same architecture, 4096 hidden, 256 output
+#   proj_hidden_dim: 4096
+#   proj_output_dim: 256
+#   pred_hidden_dim: 4096
+
+# momentum:
+#   # BYOL uses τ_k schedule with base τ ≈ 0.996 increasing towards 1.0
+#   # τ_k = 1 − (1 − τ_base) * (cos(π k / K) + 1)/2
+#   # Here: we only set endpoints; solo-learn handles scheduling internally.
+#   base_tau: 0.996
+#   final_tau: 1.0
+
+# data:
+#   dataset: "imagenet"       # change to imagenet100 / cifar10 / cifar100 as needed
+#   train_path: "/path/to/imagenet/train"
+#   val_path: "/path/to/imagenet/val"
+#   format: "image_folder"    # consistent with solo-learn image-folder datamodule
+#   num_workers: 8
+
+# optimizer:
+#   name: "lars"
+#   # BYOL paper: base LR = 0.2 for batch size 256, scaled linearly with batch size
+#   # Here we use the original batch size 4096 -> lr = 0.2 * (4096 / 256) = 3.2
+#   batch_size: 4096          # paper setting; reduce if hardware cannot handle it
+#   lr: 3.2                   # 0.2 * (batch_size / 256)
+#   classifier_lr: 0.1        # used for linear eval, not pretrain
+#   # BYOL: very small weight decay, 1.5e-6
+#   weight_decay: 1.5e-6
+#   kwargs:
+#     clip_lr: True           # solo-learn trick, safe to keep
+#     eta: 0.02               # LARS trust coefficient (solo-learn default)
+#     exclude_bias_n_norm: True
+
+# scheduler:
+#   name: "warmup_cosine"
+#   # BYOL uses 10-epoch warmup then cosine decay over full training
+#   warmup_epochs: 10
+
+# checkpoint:
+#   enabled: True
+#   dir: "trained_models/byol_imagenet_resnet50"
+#   frequency: 1
+
+# auto_resume:
+#   enabled: True
+
+# # overwrite PL stuff
+# max_epochs: 1000          # BYOL trains for 1000 epochs on ImageNet
+# devices: [0]              # adjust for multi-GPU (e.g. [0,1,2,3])
+# sync_batchnorm: True
+# accelerator: "gpu"
+# strategy: "ddp"           # or "auto" / "ddp_find_unused_parameters_false"
+# precision: 16-mixed

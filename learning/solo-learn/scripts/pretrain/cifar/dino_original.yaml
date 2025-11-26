@@ -1,0 +1,67 @@
+# configs/pretrain/imagenet/dino_vits16_imagenet.yaml
+
+defaults:
+  - _self_
+  - augmentations: dino_imagenet_multicrop.yaml #have to revise and change
+  - wandb: private.yaml
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+name: "dino-vits16-imagenet"
+method: "dino"
+
+backbone:
+  name: "vit_small"
+  kwargs:
+    patch_size: 16
+    img_size: 224
+
+method_kwargs:
+  # DINO projection head: 3-layer MLP with 2048 hidden, 256 output
+  proj_hidden_dim: 2048
+  proj_output_dim: 256
+  # DINO uses large prototype set (K = 65,536)
+  num_prototypes: 65536
+
+momentum:
+  # DINO: momentum_teacher base 0.996, cosine to 1.0
+  base_tau: 0.996
+  final_tau: 1.0
+
+data:
+  dataset: imagenet100  # or "imagenet" depending on your solo-learn setup
+  train_path: "/path/to/imagenet/train"
+  val_path: "/path/to/imagenet/val"
+  format: "image_folder"
+  num_workers: 8
+
+optimizer:
+  name: "adamw"          # DINO uses AdamW for ViTs
+  batch_size: 256        # reference batch; scale LR manually if you change this
+  lr: 0.0005             # DINO arg lr for ViT-S (ref batch size 256)
+  classifier_lr: 0.0     # no classifier during pretrain
+  weight_decay: 0.04     # initial WD (DINO uses cosine 0.04 -> 0.4)
+
+scheduler:
+  name: "warmup_cosine"  # cosine with warmup, as in DINO
+  # warmup_epochs and min_lr are handled inside solo-learn for this scheduler
+
+checkpoint:
+  enabled: True
+  dir: "trained_models"
+  frequency: 1
+
+auto_resume:
+  enabled: True
+
+max_epochs: 800          # DINO ViT-S/16 best model: 800 epochs
+devices: [0]
+sync_batchnorm: True
+accelerator: "gpu"
+strategy: "ddp"
+precision: 16-mixed
