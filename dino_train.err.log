@@ -1,0 +1,51 @@
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/lightning/fabric/__init__.py:40: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/timm/models/helpers.py:7: FutureWarning: Importing from timm.models.helpers is deprecated, please import via timm.models
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/timm/optim/optim_factory.py:7: FutureWarning: Importing from timm.optim.optim_factory is deprecated, please import via timm.optim
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.optim", FutureWarning)
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/convnext/convnext.py:27: UserWarning: Overwriting convnext_tiny in registry with solo.backbones.convnext.convnext.convnext_tiny. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def convnext_tiny(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/convnext/convnext.py:34: UserWarning: Overwriting convnext_small in registry with solo.backbones.convnext.convnext.convnext_small. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def convnext_small(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/convnext/convnext.py:41: UserWarning: Overwriting convnext_base in registry with solo.backbones.convnext.convnext.convnext_base. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def convnext_base(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/convnext/convnext.py:48: UserWarning: Overwriting convnext_large in registry with solo.backbones.convnext.convnext.convnext_large. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def convnext_large(**kwargs):
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/poolformer/poolformer.py:422: UserWarning: Overwriting poolformer_s12 in registry with solo.backbones.poolformer.poolformer.poolformer_s12. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def poolformer_s12(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/poolformer/poolformer.py:447: UserWarning: Overwriting poolformer_s24 in registry with solo.backbones.poolformer.poolformer.poolformer_s24. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def poolformer_s24(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/poolformer/poolformer.py:468: UserWarning: Overwriting poolformer_s36 in registry with solo.backbones.poolformer.poolformer.poolformer_s36. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def poolformer_s36(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/poolformer/poolformer.py:490: UserWarning: Overwriting poolformer_m36 in registry with solo.backbones.poolformer.poolformer.poolformer_m36. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def poolformer_m36(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/backbones/poolformer/poolformer.py:512: UserWarning: Overwriting poolformer_m48 in registry with solo.backbones.poolformer.poolformer.poolformer_m48. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  def poolformer_m48(**kwargs):
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/utils/whitening.py:43: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float32)
+/home/deabdela/workflow/ssl-aug-benchmark/learning/solo-learn/solo/utils/whitening.py:220: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float32)
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+wandb: Currently logged in as: abdulladell (ssl-aug-benchmark) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 5dlq731m
+wandb: Tracking run with wandb version 0.22.3
+wandb: Run data is saved locally in ./wandb/run-20251107_035717-5dlq731m
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run dino-cifar100
+wandb: ⭐️ View project at https://wandb.ai/ssl-aug-benchmark/solo-learn
+wandb: 🚀 View run at https://wandb.ai/ssl-aug-benchmark/solo-learn/runs/5dlq731m
+wandb: logging graph, to disable use `wandb.watch(log_graph=False)`
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/lightning/fabric/plugins/environments/slurm.py:191: The `srun` command is available on your system but is not used. HINT: If your intention is to run Lightning on SLURM, prepend your python command with `srun` like so: srun python main_pretrain.py --config-path scripts/pretrain/cifa ...
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/lightning/pytorch/plugins/precision/amp.py:54: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/deabdela/miniconda3/envs/sololearn/lib/python3.9/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+[rank0]:[W1108 04:39:59.714231329 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
