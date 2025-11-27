@@ -35,8 +35,9 @@ momentum:
 data:
   dataset: "cifar10"
   # solo-learn expects cifar10 to be downloaded automatically if data_dir is given
-  data_dir: "/path/to/cifar10"   # change this to where you want CIFAR stored
-  format: "cifar"
+  train_path: "./datasets"
+  val_path: "./datasets"
+  format: "image_folder"
   num_workers: 8
 
 optimizer:
@@ -58,7 +59,7 @@ scheduler:
 
 checkpoint:
   enabled: True
-  dir: "trained_models/byol_cifar10_resnet18"
+  dir: "trained_models"
   frequency: 10
 
 auto_resume:

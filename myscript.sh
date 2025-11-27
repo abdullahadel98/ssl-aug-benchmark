@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=simclr_train
-#SBATCH --error=simclr_train.err.log
+#SBATCH --job-name=byol_og_train
+#SBATCH --error=byol_og_train.err.log
 #SBATCH --partition=sharedhiti,shared,student
 #SBATCH --gres=gpu:1,gpu_mem:48000
-#SBATCH --output=simclr_train.out.log
+#SBATCH --output=byol_og_train.out.log
 #SBATCH --mem=32G
 #SBATCH --time=03-00
 #SBATCH --mail-type=FAIL,END
@@ -21,10 +21,10 @@ cd learning/solo-learn/
 # pytorch lightning's arguments can be added here as well.
 python main_pretrain.py \
     --config-path scripts/pretrain/cifar/ \
-    --config-name simclr.yaml \
-    ++name="simclr-cifar100" \
+    --config-name byol_original.yaml \
+    ++name="byol-og-cifar100" \
     ++data.dataset=cifar100 \
-    ++checkpoint.dir="/cig/common06nb/ssp_interns/Abdullah_Abdelaal/models/ssl-aug/simclr_cifar"
+    ++checkpoint.dir="/cig/common06nb/ssp_interns/Abdullah_Abdelaal/models/ssl-aug/byol_cifar_og"
 
 
 # run = wandb.init(
