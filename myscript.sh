@@ -22,9 +22,9 @@ cd learning/solo-learn/
 python main_pretrain.py \
     --config-path scripts/pretrain/cifar/ \
     --config-name simclr_original.yaml \
-    ++name="simclr-og-cifar100" \
+    ++name="simclr-og2-cifar100" \
     ++data.dataset=cifar100 \
-    ++checkpoint.dir="/cig/common06nb/ssp_interns/Abdullah_Abdelaal/models/ssl-aug/simclr_cifar_og"
+    ++checkpoint.dir="~/my_work/code/experiments/simclr_cifar_og"
 
 
 # run = wandb.init(
@@ -41,3 +41,28 @@ python main_pretrain.py \
 #     },
 # )
 
+## experiment 2 dino
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_original.yaml ++name="dino-og-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_og" > train_dino_og.log 2>&1 &
+
+## experiment 3 simclr with trivial augment
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr.yaml ++name="simclr2-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_2" > train_simclr_trivaug.log 2>&1 &
+
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr_trivAug.yaml  ++name="simclr-trivaug2-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_trivaug2" > train_simclr_trivaug2.log 2>
+&1 &
+
+## experiment 4 byol with trivial augment
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_trivAug.yaml  ++name="byol-trivaug2-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_trivaug2" > train_byol_trivaug.log 2>
+&1 &
+
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_trivAug.yaml  ++name="dino-trivaugS-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_trivaugS" > train_dino_trivaug.log 2>
+&1 &
+
+
+set -a
+source .env
+set +a
+
+conda activate sololearn
+
+# Run from solo-learn directory
+cd learning/solo-learn/

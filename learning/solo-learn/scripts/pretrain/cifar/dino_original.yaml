@@ -2,7 +2,7 @@
 
 defaults:
   - _self_
-  - augmentations: dino_imagenet_multicrop.yaml #have to revise and change
+  - augmentations: asymmetric_dino_og.yaml #have to revise and change
   - wandb: private.yaml
   - override hydra/hydra_logging: disabled
   - override hydra/job_logging: disabled
@@ -12,14 +12,14 @@ hydra:
   run:
     dir: .
 
-name: "dino-vits16-imagenet"
+name: "dino-vits16-cifar100" # change here for cifar10
 method: "dino"
 
 backbone:
   name: "vit_small"
   kwargs:
     patch_size: 16
-    img_size: 224
+    img_size: 32
 
 method_kwargs:
   # DINO projection head: 3-layer MLP with 2048 hidden, 256 output
@@ -34,9 +34,9 @@ momentum:
   final_tau: 1.0
 
 data:
-  dataset: imagenet100  # or "imagenet" depending on your solo-learn setup
-  train_path: "/path/to/imagenet/train"
-  val_path: "/path/to/imagenet/val"
+  dataset: cifar100  # or "imagenet" depending on your solo-learn setup
+  train_path: "./datasets"
+  val_path: "./datasets"
   format: "image_folder"
   num_workers: 8
 
@@ -59,7 +59,7 @@ checkpoint:
 auto_resume:
   enabled: True
 
-max_epochs: 800          # DINO ViT-S/16 best model: 800 epochs
+max_epochs: 1000          # DINO ViT-S/16 best model: 800 epochs
 devices: [0]
 sync_batchnorm: True
 accelerator: "gpu"

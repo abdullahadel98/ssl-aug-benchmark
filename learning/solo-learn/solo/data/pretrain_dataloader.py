@@ -30,6 +30,8 @@ from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms
 from torchvision.datasets import STL10, ImageFolder
+from torchvision.transforms import functional as F
+from torchvision.transforms.autoaugment import _apply_op
 
 try:
     from solo.data.h5_dataset import H5Dataset
@@ -151,7 +153,41 @@ class NCropAugmentation:
     def __repr__(self) -> str:
         return f"{self.num_crops} x [{self.transform}]"
 
-
+class SelectiveTrivialAugmentWide(transforms.TrivialAugmentWide):
+    def __init__(self, num_magnitude_bins=31, interpolation=transforms.InterpolationMode.NEAREST, 
+                 fill=None, allowed_ops=None):
+        super().__init__(num_magnitude_bins, interpolation, fill)
+        # If None, use all ops; otherwise only these
+        self.allowed_ops = allowed_ops
+    
+    def forward(self, img):
+        fill = self.fill
+        channels, height, width = F.get_dimensions(img)
+        if isinstance(img, torch.Tensor):
+            if isinstance(fill, (int, float)):
+                fill = [float(fill)] * channels
+            elif fill is not None:
+                fill = [float(f) for f in fill]
+        
+        op_meta = self._augmentation_space(self.num_magnitude_bins)
+        
+        # Filter operations if allowed_ops is specified
+        if self.allowed_ops is not None:
+            op_meta = {k: v for k, v in op_meta.items() if k in self.allowed_ops}
+        
+        op_index = int(torch.randint(len(op_meta), (1,)).item())
+        op_name = list(op_meta.keys())[op_index]
+        magnitudes, signed = op_meta[op_name]
+        magnitude = (
+            float(magnitudes[torch.randint(len(magnitudes), (1,), dtype=torch.long)].item())
+            if magnitudes.ndim > 0 else 0.0
+        )
+        if signed and torch.randint(2, (1,)):
+            magnitude *= -1.0
+        
+        return _apply_op(img, op_name, magnitude, 
+                                                     interpolation=self.interpolation, fill=fill)
+    
 class FullTransformPipeline:
     def __init__(self, transforms: Callable) -> None:
         self.transforms = transforms
@@ -261,6 +297,44 @@ def build_transform_pipeline(dataset, cfg):
 
     if cfg.horizontal_flip.prob:
         augmentations.append(transforms.RandomHorizontalFlip(p=cfg.horizontal_flip.prob))
+
+    # If resize_to_backbone is specified, resize to that size before ToTensor - abdullah
+    if cfg.get("resize_to_backbone", None) is not None:
+        augmentations.append(
+            transforms.Resize(
+                cfg.resize_to_backbone,
+                interpolation=transforms.InterpolationMode.BICUBIC,
+            ),
+        )
+
+    # add trivial augment to the recipe - abdullah
+
+    if cfg.trivial_augment.enabled:
+        allowed_ops = {
+            "Identity",
+            "ShearX",
+            "ShearY",
+            "TranslateX",
+            "TranslateY",
+            "Rotate",
+        }
+        augmentations.append(
+            SelectiveTrivialAugmentWide(
+                num_magnitude_bins=cfg.trivial_augment.num_magnitude_bins, 
+                interpolation=transforms.InterpolationMode.NEAREST,
+                allowed_ops=allowed_ops,
+                ),
+            )
+        
+    # add rand augment to the recipe - abdullah
+    if cfg.rand_augment.enabled:
+        augmentations.append(
+            transforms.RandAugment(
+                num_ops=cfg.rand_augment.num_ops,
+                magnitude=cfg.rand_augment.magnitude,
+                num_magnitude_bins=cfg.rand_augment.num_magnitude_bins,
+            ),
+        )
 
     augmentations.append(transforms.ToTensor())
     augmentations.append(transforms.Normalize(mean=mean, std=std))
