@@ -19,8 +19,13 @@
   horizontal_flip:
     prob: 0.5
   trivial_augment:
-    enabled: True
+    enabled: False
     num_magnitude_bins: 31
     # interpolation: transforms.InterpolationMode.NEAREST
+  rand_augment:
+    enabled: True
+    num_ops: 3
+    magnitude: 9
+    num_magnitude_bins: 31
   crop_size: 32
   num_crops: 2
