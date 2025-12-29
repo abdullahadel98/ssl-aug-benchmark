@@ -185,8 +185,44 @@ class SelectiveTrivialAugmentWide(transforms.TrivialAugmentWide):
         if signed and torch.randint(2, (1,)):
             magnitude *= -1.0
         
-        return _apply_op(img, op_name, magnitude, 
-                                                     interpolation=self.interpolation, fill=fill)
+        return _apply_op(img, op_name, magnitude, interpolation=self.interpolation, fill=fill)
+    
+class SelectiveRandAugment(transforms.RandAugment):
+    def __init__(self, num_ops = 2, magnitude= 9, num_magnitude_bins = 31, interpolation = transforms.InterpolationMode.NEAREST,
+                 fill = None, allowed_ops=None):
+        super().__init__(num_ops, magnitude, num_magnitude_bins, interpolation, fill)
+        # If None, use all ops; otherwise only these
+        self.allowed_ops = allowed_ops
+    
+    def forward(self, img):
+        """
+            img (PIL Image or Tensor): Image to be transformed.
+
+        Returns:
+            PIL Image or Tensor: Transformed image.
+        """
+        fill = self.fill
+        channels, height, width = F.get_dimensions(img)
+        if isinstance(img, torch.Tensor):
+            if isinstance(fill, (int, float)):
+                fill = [float(fill)] * channels
+            elif fill is not None:
+                fill = [float(f) for f in fill]
+
+        op_meta = self._augmentation_space(self.num_magnitude_bins, (height, width))
+        if self.allowed_ops is not None:
+            op_meta = {k: v for k, v in op_meta.items() if k in self.allowed_ops}
+
+        for _ in range(self.num_ops):
+            op_index = int(torch.randint(len(op_meta), (1,)).item())
+            op_name = list(op_meta.keys())[op_index]
+            magnitudes, signed = op_meta[op_name]
+            magnitude = float(magnitudes[self.magnitude].item()) if magnitudes.ndim > 0 else 0.0
+            if signed and torch.randint(2, (1,)):
+                magnitude *= -1.0
+            img = _apply_op(img, op_name, magnitude, interpolation=self.interpolation, fill=fill)
+
+        return img
     
 class FullTransformPipeline:
     def __init__(self, transforms: Callable) -> None:
@@ -328,11 +364,20 @@ def build_transform_pipeline(dataset, cfg):
         
     # add rand augment to the recipe - abdullah
     if cfg.rand_augment.enabled:
+        allowed_ops = {
+            "Identity",
+            "ShearX",
+            "ShearY",
+            "TranslateX",
+            "TranslateY",
+            "Rotate",
+        }
         augmentations.append(
-            transforms.RandAugment(
+            SelectiveRandAugment(
                 num_ops=cfg.rand_augment.num_ops,
                 magnitude=cfg.rand_augment.magnitude,
                 num_magnitude_bins=cfg.rand_augment.num_magnitude_bins,
+                allowed_ops=allowed_ops,
             ),
         )
 
