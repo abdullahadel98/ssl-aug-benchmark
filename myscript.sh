@@ -51,7 +51,7 @@ nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-nam
 &1 &
 
 ## experiment 4 byol with trivial augment
-nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_trivAug.yaml  ++name="byol-trivaugS-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_trivaugS" > train_byol_trivaug.log 2>
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_trivAug.yaml  ++name="byol-randaug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_randaug" ++devices=[0] > train_byol_trivaug.log 2>
 &1 &
 
 nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_trivAug.yaml  ++name="dino-randaug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_randaug" > train_dino_trivaug.log 2>
@@ -66,3 +66,8 @@ conda activate sololearn
 
 # Run from solo-learn directory
 cd learning/solo-learn/
+
+
+nohup python train_DRAEM.py --gpu_id 1 --obj_id -1 --lr 0.0001 --bs 8 --epochs 700 --data_path ./datasets/mvtec/ --anomaly_source_path ./datasets/dtd/images/ --checkpoint_path $HOME/my_work/code/experiments/draem_mvtec_og --log_path ./logs/ > train_draem.log 2>&1 &
+
+nohup python train_DRAEM.py --gpu_id 1 --obj_id -1 --lr 0.0001 --bs 8 --epochs 700 --data_path ./datasets/mvtec/ --anomaly_source_path ./datasets/dtd/images/ --checkpoint_path $HOME/my_work/code/experiments/draem_mvtec_og --log_path ./logs/ --visualize True > train_draem.log 2>&1 &

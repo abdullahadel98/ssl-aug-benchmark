@@ -6,6 +6,7 @@ from tensorboard_visualizer import TensorboardVisualizer
 from model_unet import ReconstructiveSubNetwork, DiscriminativeSubNetwork
 from loss import FocalLoss, SSIM
 import os
+import wandb
 
 def get_lr(optimizer):
     for param_group in optimizer.param_groups:
@@ -29,6 +30,17 @@ def train_on_device(obj_names, args):
 
     for obj_name in obj_names:
         run_name = 'DRAEM_test_'+str(args.lr)+'_'+str(args.epochs)+'_bs'+str(args.bs)+"_"+obj_name+'_'
+
+        # Initialize wandb
+        wandb.init(project="draem-training", 
+                   name=run_name,
+                   config={
+                       'learning_rate': args.lr,
+                       'batch_size': args.bs,
+                       'epochs': args.epochs,
+                       'object': obj_name,
+                       'gpu_id': args.gpu_id
+                   })
 
         visualizer = TensorboardVisualizer(log_dir=os.path.join(args.log_path, run_name+"/"))
 
@@ -84,6 +96,10 @@ def train_on_device(obj_names, args):
                     visualizer.plot_loss(l2_loss, n_iter, loss_name='l2_loss')
                     visualizer.plot_loss(ssim_loss, n_iter, loss_name='ssim_loss')
                     visualizer.plot_loss(segment_loss, n_iter, loss_name='segment_loss')
+                    wandb.log({'l2_loss': l2_loss.item(),
+                               'ssim_loss': ssim_loss.item(),
+                               'segment_loss': segment_loss.item(),
+                               'total_loss': loss.item()}, step=n_iter)
                 if args.visualize and n_iter % 400 == 0:
                     t_mask = out_mask_sm[:, 1:, :, :]
                     visualizer.visualize_image_batch(aug_gray_batch, n_iter, image_name='batch_augmented')
@@ -91,6 +107,15 @@ def train_on_device(obj_names, args):
                     visualizer.visualize_image_batch(gray_rec, n_iter, image_name='batch_recon_out')
                     visualizer.visualize_image_batch(anomaly_mask, n_iter, image_name='mask_target')
                     visualizer.visualize_image_batch(t_mask, n_iter, image_name='mask_out')
+                    
+                    # Log first 3 images from batch to wandb
+                    wandb.log({
+                        'batch_augmented': [wandb.Image(aug_gray_batch[i].permute(1, 2, 0).cpu().detach().numpy()) for i in range(min(3, aug_gray_batch.shape[0]))],
+                        'batch_recon_target': [wandb.Image(gray_batch[i].permute(1, 2, 0).cpu().detach().numpy()) for i in range(min(3, gray_batch.shape[0]))],
+                        'batch_recon_out': [wandb.Image(gray_rec[i].permute(1, 2, 0).cpu().detach().numpy()) for i in range(min(3, gray_rec.shape[0]))],
+                        'mask_target': [wandb.Image(anomaly_mask[i].permute(1, 2, 0).cpu().detach().numpy()) for i in range(min(3, anomaly_mask.shape[0]))],
+                        'mask_out': [wandb.Image(t_mask[i].permute(1, 2, 0).cpu().detach().numpy()) for i in range(min(3, t_mask.shape[0]))]
+                    }, step=n_iter)
 
 
                 n_iter +=1
@@ -99,6 +124,8 @@ def train_on_device(obj_names, args):
 
             torch.save(model.state_dict(), os.path.join(args.checkpoint_path, run_name+".pckl"))
             torch.save(model_seg.state_dict(), os.path.join(args.checkpoint_path, run_name+"_seg.pckl"))
+
+        wandb.finish()
 
 
 if __name__=="__main__":

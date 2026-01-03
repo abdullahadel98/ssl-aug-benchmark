@@ -4,7 +4,7 @@
 # .env.*.local
 
 # # Python
-# __pycache__/
+*__pycache__/
 # *.py[cod]
 # *$py.class
 # *.so
@@ -40,6 +40,8 @@
 # # Logs
 *.log
 # *.out
+/learning/draem/logs/
+*wandb/
 
 # # Experiments and checkpoints
 # experiments/
@@ -52,6 +54,6 @@
 # .wandb/
 
 # # Data
-# datasets/
+learning/draem/datasets/
 # data/
 # *.h5
