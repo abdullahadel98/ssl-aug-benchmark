@@ -1,0 +1,3 @@
+enabled: True
+entity: "ssl-aug-benchmark"
+project: "solo-learn"
