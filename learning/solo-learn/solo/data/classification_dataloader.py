@@ -36,6 +36,13 @@ except ImportError:
 else:
     _h5_available = True
 
+try:
+    from solo.data.mvtec_dataloader import MVTecImageFolder
+except ImportError:
+    _mvtec_available = False
+else:
+    _mvtec_available = True
+
 
 def build_custom_pipeline():
     """Builds augmentation pipelines for custom data.
@@ -218,7 +225,7 @@ def prepare_datasets(
             transform=T_val,
         )
 
-    elif dataset in ["imagenet", "imagenet100", "mvtec-ad", "custom"]:
+    elif dataset in ["imagenet", "imagenet100", "custom"]:
         if data_format == "h5":
             assert _h5_available
             train_dataset = H5Dataset(dataset, train_data_path, T_train)
@@ -226,6 +233,12 @@ def prepare_datasets(
         else:
             train_dataset = ImageFolder(train_data_path, T_train)
             val_dataset = ImageFolder(val_data_path, T_val)
+
+    elif dataset == "mvtec-ad":
+        # MVTec-AD uses custom loader for hierarchical structure
+        assert _mvtec_available, "MVTec loader not available"
+        train_dataset = MVTecImageFolder(train_data_path, transform=T_train, split="train")
+        val_dataset = MVTecImageFolder(val_data_path, transform=T_val, split="test")
 
     if data_fraction > 0:
         assert data_fraction < 1, "Only use data_fraction for values smaller than 1."

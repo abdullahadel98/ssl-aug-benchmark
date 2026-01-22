@@ -40,6 +40,13 @@ except ImportError:
 else:
     _h5_available = True
 
+try:
+    from solo.data.mvtec_dataloader import MVTecImageFolder
+except ImportError:
+    _mvtec_available = False
+else:
+    _mvtec_available = True
+
 
 def dataset_with_index(DatasetClass: Type[Dataset]) -> Type[Dataset]:
     """Factory for datasets that also returns the data index.
@@ -347,13 +354,25 @@ def build_transform_pipeline(dataset, cfg):
     # add trivial augment to the recipe - abdullah
 
     if cfg.trivial_augment.enabled:
+        # allowed_ops = {
+        #     "Identity",
+        #     "ShearX",
+        #     "ShearY",
+        #     "TranslateX",
+        #     "TranslateY",
+        #     "Rotate",
+        # }
         allowed_ops = {
             "Identity",
-            "ShearX",
-            "ShearY",
-            "TranslateX",
-            "TranslateY",
             "Rotate",
+            "Brightness",
+            "Color",
+            "Contrast",
+            "Sharpness",
+            "Posterize",
+            "Solarize",
+            "AutoContrast",
+            "Equalize",
         }
         augmentations.append(
             SelectiveTrivialAugmentWide(
@@ -365,13 +384,25 @@ def build_transform_pipeline(dataset, cfg):
         
     # add rand augment to the recipe - abdullah
     if cfg.rand_augment.enabled:
+        # allowed_ops = {
+        #     "Identity",
+        #     "ShearX",
+        #     "ShearY",
+        #     "TranslateX",
+        #     "TranslateY",
+        #     "Rotate",
+        # }
         allowed_ops = {
             "Identity",
-            "ShearX",
-            "ShearY",
-            "TranslateX",
-            "TranslateY",
             "Rotate",
+            "Brightness",
+            "Color",
+            "Contrast",
+            "Sharpness",
+            "Posterize",
+            "Solarize",
+            "AutoContrast",
+            "Equalize",
         }
         augmentations.append(
             SelectiveRandAugment(
@@ -455,12 +486,20 @@ def prepare_datasets(
             transform=transform,
         )
 
-    elif dataset in ["imagenet", "imagenet100", "mvtec-ad"]:
+    elif dataset in ["imagenet", "imagenet100"]:
         if data_format == "h5":
             assert _h5_available
             train_dataset = dataset_with_index(H5Dataset)(dataset, train_data_path, transform)
         else:
             train_dataset = dataset_with_index(ImageFolder)(train_data_path, transform)
+
+    elif dataset == "mvtec-ad":
+        # MVTec-AD has hierarchical structure: category/train/good/ and category/test/good/
+        # Use custom loader that aggregates all categories into a single dataset
+        assert _mvtec_available, "MVTec loader not available. Check mvtec_dataloader.py"
+        train_dataset = dataset_with_index(MVTecImageFolder)(
+            train_data_path, transform=transform, split="train"
+        )
 
     elif dataset == "custom":
         if no_labels:

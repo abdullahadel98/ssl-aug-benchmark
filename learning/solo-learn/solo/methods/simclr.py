@@ -24,9 +24,10 @@ import torch
 import torch.nn as nn
 from solo.losses.simclr import simclr_loss_func
 from solo.methods.base import BaseMethod
+from solo.methods.batch_augmentation_mixin import BatchAugmentationMixin
 
 
-class SimCLR(BaseMethod):
+class SimCLR(BatchAugmentationMixin, BaseMethod):
     def __init__(self, cfg: omegaconf.DictConfig):
         """Implements SimCLR (https://arxiv.org/abs/2002.05709).
 
@@ -38,6 +39,7 @@ class SimCLR(BaseMethod):
         """
 
         super().__init__(cfg)
+        self.setup_batch_augmentations(cfg)
 
         self.temperature: float = cfg.method_kwargs.temperature
 
@@ -125,6 +127,11 @@ class SimCLR(BaseMethod):
         Returns:
             torch.Tensor: total loss composed of SimCLR loss and classification loss.
         """
+
+        indexes, X, targets = batch
+        X = [X] if isinstance(X, torch.Tensor) else X
+    
+        X = self.apply_batch_augmentations(X)
 
         indexes = batch[0]
 

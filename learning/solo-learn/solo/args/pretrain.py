@@ -26,6 +26,7 @@ _N_CLASSES_PER_DATASET = {
     "stl10": 10,
     "imagenet": 1000,
     "imagenet100": 100,
+    "mvtec-ad": 15,
 }
 
 _SUPPORTED_DATASETS = [
@@ -34,6 +35,7 @@ _SUPPORTED_DATASETS = [
     "stl10",
     "imagenet",
     "imagenet100",
+    "mvtec-ad",
     "custom",
 ]
 

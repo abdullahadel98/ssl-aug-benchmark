@@ -47,15 +47,25 @@ nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-nam
 ## experiment 3 simclr with trivial augment
 nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr.yaml ++name="simclr2-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_2" > train_simclr_trivaug.log 2>&1 &
 
-nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr_trivAug.yaml  ++name="simclr-randaug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_randaug" ++devices=[0] > train_simclr_trivaug2.log 2>
-&1 &
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr_trivAug.yaml  ++name="simclr-trivaug-coloraug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_trivaug_coloraug" ++devices=[0] > train_simclr_trivaug2.log 2>&1 &
 
 ## experiment 4 byol with trivial augment
-nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_trivAug.yaml  ++name="byol-randaug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_randaug" ++devices=[0] > train_byol_trivaug.log 2>
-&1 &
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_trivAug.yaml  ++name="byol-trivaug-coloraug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_trivaug_coloraug" ++devices=[1] > train_byol_trivaug.log 2>&1 &
 
-nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_trivAug.yaml  ++name="dino-randaug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_randaug" > train_dino_trivaug.log 2>
-&1 &
+
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_trivAug.yaml  ++name="dino-trivaug-coloraug-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_trivaug_coloraug" ++devices=[0] > train_dino_trivaug.log 2>&1 &
+
+
+nohup python main_pretrain.py --config-path scripts/pretrain/mvtec-ad/ --config-name simclr.yaml ++name="simclr-mvtec-ad" ++data.dataset=mvtec-ad ++data.train_path="/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec" ++data.val_path="/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec" ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_mvtec_ad" > train_simclr_mvtec.log 2>&1 &
+
+## cifar style transfer simclr
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name simclr_styletrans.yaml  ++name="simclr-styletrans-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/simclr_cifar_styletrans" ++devices=[1] > train_simclr_styletrans.log 2>&1 &
+
+## cifar style transfer byol
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name byol_styletrans.yaml  ++name="byol-styletrans-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/byol_cifar_styletrans" ++devices=[0] > train_byol_styletrans.log 2>&1 &
+
+## cifar style transfer dino
+nohup python main_pretrain.py --config-path scripts/pretrain/cifar/ --config-name dino_styletrans.yaml  ++name="dino-styletrans-cifar100" ++data.dataset=cifar100 ++checkpoint.dir="$HOME/my_work/code/experiments/dino_cifar_styletrans" ++devices=[1] > train_dino_styletrans.log 2>&1 &
 
 
 set -a
@@ -67,6 +77,7 @@ conda activate sololearn
 # Run from solo-learn directory
 cd learning/solo-learn/
 
+watch -n 2 nvidia-smi
 
 nohup python train_DRAEM.py --gpu_id 1 --obj_id -1 --lr 0.0001 --bs 8 --epochs 700 --data_path ./datasets/mvtec/ --anomaly_source_path ./datasets/dtd/images/ --checkpoint_path $HOME/my_work/code/experiments/draem_mvtec_og --log_path ./logs/ > train_draem.log 2>&1 &
 

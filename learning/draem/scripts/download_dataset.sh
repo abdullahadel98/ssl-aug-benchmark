@@ -19,3 +19,6 @@ rm mvtec_anomaly_detection.tar.xz
 wget https://zenodo.org/records/3555552/files/CIFAR-100-C.tar
 tar -xf CIFAR-100-C.tar
 rm CIFAR-100-C.tar
+
+# download style features dataset
+kaggle datasets download rojanregmi/style-feats-adain-1000

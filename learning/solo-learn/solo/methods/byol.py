@@ -26,10 +26,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from solo.losses.byol import byol_loss_func
 from solo.methods.base import BaseMomentumMethod
+from solo.methods.batch_augmentation_mixin import BatchAugmentationMixin
 from solo.utils.momentum import initialize_momentum_params
 
 
-class BYOL(BaseMomentumMethod):
+class BYOL(BatchAugmentationMixin, BaseMomentumMethod):
     def __init__(self, cfg: omegaconf.DictConfig):
         """Implements BYOL (https://arxiv.org/abs/2006.07733).
 
@@ -41,6 +42,7 @@ class BYOL(BaseMomentumMethod):
         """
 
         super().__init__(cfg)
+        self.setup_batch_augmentations(cfg)
 
         proj_hidden_dim: int = cfg.method_kwargs.proj_hidden_dim
         proj_output_dim: int = cfg.method_kwargs.proj_output_dim
@@ -176,6 +178,11 @@ class BYOL(BaseMomentumMethod):
         Returns:
             torch.Tensor: total loss composed of BYOL and classification loss.
         """
+
+        indexes, X, targets = batch
+        X = [X] if isinstance(X, torch.Tensor) else X
+        
+        X = self.apply_batch_augmentations(X)
 
         out = super().training_step(batch, batch_idx)
         class_loss = out["loss"]

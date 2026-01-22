@@ -21,14 +21,16 @@ method_kwargs:
   temperature: 0.2
 data:
   dataset: mvtec-ad
-  train_path: "/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec/train"
-  val_path: "/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec/val"
+  # MVTec-AD structure: mvtec/bottle/train/good/, mvtec/cable/train/good/, etc.
+  # Using parent mvtec directory - loader will aggregate all category subdirectories
+  train_path: "/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec"
+  val_path: "/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/draem/datasets/mvtec"
   format: "image_folder"
   num_workers: 4
 optimizer:
   name: "lars"
-  batch_size: 64
-  lr: 0.25
+  batch_size: 32  # Reduced from 64 due to larger image sizes (800-1024px)
+  lr: 0.2  # Reduced from 0.25 for smaller batch size
   classifier_lr: 0.1
   weight_decay: 1e-4
   kwargs:
@@ -45,8 +47,8 @@ auto_resume:
   enabled: True
 
 # overwrite PL stuff
-max_epochs: 250
-devices: [0]
+max_epochs: 200  # Reduced from 250 for smaller dataset (~5000 images total)
+devices: [0, 1]
 sync_batchnorm: False
 accelerator: "gpu"
 strategy: "ddp"

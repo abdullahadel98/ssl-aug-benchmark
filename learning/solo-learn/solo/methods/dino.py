@@ -25,6 +25,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from solo.losses.dino import DINOLoss
 from solo.methods.base import BaseMomentumMethod
+from solo.methods.batch_augmentation_mixin import BatchAugmentationMixin
 from solo.utils.misc import omegaconf_select, trunc_normal_
 from solo.utils.momentum import initialize_momentum_params
 
@@ -111,7 +112,7 @@ class DINOHead(nn.Module):
         return x
 
 
-class DINO(BaseMomentumMethod):
+class DINO(BatchAugmentationMixin, BaseMomentumMethod):
     def __init__(self, cfg: omegaconf.DictConfig):
         """Adds DINO head to the student and momentum DINO head to the teacher.
 
@@ -132,6 +133,7 @@ class DINO(BaseMomentumMethod):
         """
 
         super().__init__(cfg)
+        self.setup_batch_augmentations(cfg)
 
         self.clip_grad: bool = cfg.method_kwargs.clip_grad
         self.freeze_last_layer: bool = cfg.method_kwargs.freeze_last_layer
@@ -307,6 +309,12 @@ class DINO(BaseMomentumMethod):
             torch.Tensor: total loss composed of DINO loss and classification loss.
         """
 
+        indexes, X, targets = batch
+        X = [X] if isinstance(X, torch.Tensor) else X
+        
+        X = self.apply_batch_augmentations(X)
+        
+        batch = (indexes, X, targets)
         out = super().training_step(batch, batch_idx)
         class_loss = out["loss"]
         p = torch.cat(out["z"])

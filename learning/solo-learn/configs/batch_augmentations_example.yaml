@@ -1,0 +1,24 @@
+# Batch-level augmentations configuration
+# Add this to your training config files
+
+# Example: configs/pretrain/simclr_with_style_transfer.yaml
+batch_augmentations:
+  style_transfer:
+    enabled: true
+    # Path to pre-extracted style features (numpy array)
+    features_path: "${oc.env:PROJECT_ROOT}/augmentation/mbda/features/style_feats_adain_1000.npy"
+    # OR relative to working directory:
+    # features_path: "augmentation/mbda/features/style_feats_adain_1000.npy"
+    
+    # Optional: paths to pretrained models
+    # encoder_path: "path/to/vgg_normalised.pth"
+    # decoder_path: "path/to/decoder.pth"
+    
+    # Alpha blending strength [0, 1]
+    # 0 = only content, 1 = full style transfer
+    alpha_min: 0.7
+    alpha_max: 1.0
+    
+    # Probability of applying style transfer to samples in batch [0, 1]
+    # 0.5 means ~50% of batch will be augmented
+    probability: 0.5
