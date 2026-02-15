@@ -20,6 +20,7 @@
 import inspect
 import logging
 import os
+from pathlib import Path
 
 import hydra
 import torch
@@ -68,7 +69,9 @@ def main(cfg: DictConfig):
             backbone.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2, bias=False)
             backbone.maxpool = nn.Identity()
 
-    ckpt_path = cfg.pretrained_feature_extractor
+    # ckpt_path = cfg.pretrained_feature_extractor
+    ckpt_dir = Path(cfg.pretrained_feature_extractor)
+    ckpt_path = str([ckpt_dir / ckpt for ckpt in os.listdir(ckpt_dir) if ckpt.endswith(".ckpt")][0])
     assert ckpt_path.endswith(".ckpt") or ckpt_path.endswith(".pth") or ckpt_path.endswith(".pt")
 
     state = torch.load(ckpt_path, map_location="cpu")["state_dict"]

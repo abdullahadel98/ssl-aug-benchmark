@@ -1,0 +1,11 @@
+# # Minimal wandb config placeholder to avoid MissingConfig
+# project: null
+# entity: null
+# offline: true
+# mode: disabled
+# log_model: false
+# watch_model: false
+
+enabled: True
+entity: "ssl-aug-benchmark"
+project: "solo-learn_linear"

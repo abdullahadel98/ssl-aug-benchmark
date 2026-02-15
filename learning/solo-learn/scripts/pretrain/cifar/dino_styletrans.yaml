@@ -57,7 +57,7 @@ precision: 16-mixed
 
 batch_augmentations:
   style_transfer:
-    enabled: true
+    enabled: false
     # Path to pre-extracted style features (numpy array)
     features_path: "$HOME/my_work/code/ssl-aug-benchmark/augmentation/mbda/features/style_feats_adain_1000.npy"
     # OR relative to working directory:
@@ -74,4 +74,4 @@ batch_augmentations:
     
     # Probability of applying style transfer to samples in batch [0, 1]
     # 0.2 means ~20% of batch will be augmented
-    probability: 0.2
+    probability: 0.1
