@@ -1,0 +1,142 @@
+CIFAR-100-C Evaluation Summary Report - Organized by Method
+===========================================================
+
+================================================================================
+BYOL - Ranked by Mean Accuracy (Descending)
+================================================================================
+
+1. byol_cifar_trivaug2_eh66qcpw
+   Mean Accuracy = 57.98884210526316%
+   Mean ECE = 0.0388515803864912
+
+2. byol_cifar_trivaug_98witoqh
+   Mean Accuracy = 56.76536842105263%
+   Mean ECE = 0.03824433642684629
+
+3. byol_cifar_trivaug_coloraug_7fz156my
+   Mean Accuracy = 54.26947368421052%
+   Mean ECE = 0.06592996751791552
+
+4. byol_cifar_randaug_coloraug_j0kljjpa
+   Mean Accuracy = 52.157684210526305%
+   Mean ECE = 0.06126974307392773
+
+5. byol_cifar_styletrans30per_bwc2mfqk
+   Mean Accuracy = 51.69726315789474%
+   Mean ECE = 0.07505564612189405
+
+6. byol_cifar_styletrans_0c4qbnfe
+   Mean Accuracy = 51.480210526315794%
+   Mean ECE = 0.06498805306067593
+
+7. byol_cifar_styletrans25per_50gnuei8
+   Mean Accuracy = 51.09178947368421%
+   Mean ECE = 0.06582266557961702
+
+8. byol_cifar_styletrans10per_rmq05izo
+   Mean Accuracy = 48.625894736842106%
+   Mean ECE = 0.0822199834510684
+
+9. byol_cifar_randaug_gcx6op5k
+   Mean Accuracy = 48.30210526315789%
+   Mean ECE = 0.07218715720074742
+
+10. byol_cifar_trivaugS_tdb8svem
+    Mean Accuracy = 47.42831578947368%
+    Mean ECE = 0.0680472367982331
+
+11. byol_cifar_solo_pjx5quld
+    Mean Accuracy = 43.83252631578948%
+    Mean ECE = 0.10347841547704056
+
+================================================================================
+DINO - Ranked by Mean Accuracy (Descending)
+================================================================================
+
+1. dino_cifar_solo_sqhjdez6
+   Mean Accuracy = 36.961052631578944%
+   Mean ECE = 0.12646765041312105
+
+2. dino_cifar_styletrans10per_5jcaa3al
+   Mean Accuracy = 36.45252631578947%
+   Mean ECE = 0.11250228807330132
+
+3. dino_cifar_randaug_a42qt5eq
+   Mean Accuracy = 32.76505263157895%
+   Mean ECE = 0.134167575522473
+
+4. dino_cifar_trivaug_ltba17gn
+   Mean Accuracy = 34.0401052631579%
+   Mean ECE = 0.11229534819722176
+
+5. dino_cifar_styletrans_lt2hal0w
+   Mean Accuracy = 30.5538947368421%
+   Mean ECE = 0.1263422593964558
+
+6. dino_cifar_trivaugS_r6royqo9
+   Mean Accuracy = 18.55294736842106%
+   Mean ECE = 0.07591157127171755
+
+7. dino_cifar_trivaug2_4uphl0kq
+   Mean Accuracy = 16.24263157894737%
+   Mean ECE = 0.02501463081295553
+
+8. dino_cifar_trivaug_coloraug_5kwviaed
+   Mean Accuracy = 16.19957894736842%
+   Mean ECE = 0.025916553494569502
+
+9. dino_cifar_randaug_coloraug_tyew7caa
+   Mean Accuracy = 16.060210526315785%
+   Mean ECE = 0.026693368428631833
+
+================================================================================
+SimCLR - Ranked by Mean Accuracy (Descending)
+================================================================================
+
+1. simclr_cifar_trivaug_coloraug_owpioiua
+   Mean Accuracy = 56.523999999999994%
+   Mean ECE = 0.028039372624143175
+
+2. simclr_cifar_trivaug3_6yy63s0e
+   Mean Accuracy = 55.224526315789475%
+   Mean ECE = 0.027210283338239317
+
+3. simclr_cifar_styletrans10per_vjrmtssy
+   Mean Accuracy = 54.94936842105262%
+   Mean ECE = 0.03344744438991735
+
+4. simclr_cifar_randaug_coloraug_h0h9zfls
+   Mean Accuracy = 54.58505263157896%
+   Mean ECE = 0.03202511507429575
+
+5. simclr_cifar_styletrans_mp_wz25tycb
+   Mean Accuracy = 53.78726315789473%
+   Mean ECE = 0.03551629759175213
+
+6. simclr_cifar_styletrans25per_ojlgdy3p
+   Mean Accuracy = 53.10242105263158%
+   Mean ECE = 0.038959338623834286
+
+7. simclr_cifar_randaug_h3oldjc2
+   Mean Accuracy = 52.99505263157895%
+   Mean ECE = 0.03054691211467511
+
+8. simclr_cifar_solo_ag4ufm8r
+   Mean Accuracy = 51.729894736842105%
+   Mean ECE = 0.04047726800567225
+
+9. simclr_cifar_trivaugS_sx7wb68p
+   Mean Accuracy = 48.077999999999996%
+   Mean ECE = 0.054240655595142594
+
+10. simclr_cifar_trivaug2_aqjiuu6o
+    Mean Accuracy = 41.113789473684214%
+    Mean ECE = 0.06979641886918168
+
+11. simclr_cifar_trivaug_kphlb1mf
+    Mean Accuracy = 41.10105263157895%
+    Mean ECE = 0.06060693996321214
+
+12. simclr_cifar_og_jmthjoo1
+    Mean Accuracy = 39.186315789473674%
+    Mean ECE = 0.10087168236312113

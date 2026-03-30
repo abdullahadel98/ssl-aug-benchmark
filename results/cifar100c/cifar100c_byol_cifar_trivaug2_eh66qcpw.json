@@ -1,0 +1,95 @@
+{
+  "checkpoint": "/home/RUS_CIP/st190519/my_work/code/experiments/linear/byol_cifar_trivaug2//linear/eh66qcpw/byol-trivaug2-cifar100-eh66qcpw-ep=99.ckpt",
+  "cifar100c_path": "/home/RUS_CIP/st190519/my_work/code/ssl-aug-benchmark/learning/solo-learn/datasets/CIFAR-100-C",
+  "results": {
+    "gaussian_noise": {
+      "accuracy": 41.24,
+      "calibration_error": 0.029098480939865112
+    },
+    "shot_noise": {
+      "accuracy": 47.804,
+      "calibration_error": 0.007677131332457066
+    },
+    "impulse_noise": {
+      "accuracy": 52.358,
+      "calibration_error": 0.00932617112994194
+    },
+    "defocus_blur": {
+      "accuracy": 67.688,
+      "calibration_error": 0.04913594201207161
+    },
+    "glass_blur": {
+      "accuracy": 48.596,
+      "calibration_error": 0.01216204185038805
+    },
+    "motion_blur": {
+      "accuracy": 63.678,
+      "calibration_error": 0.044921282678842545
+    },
+    "zoom_blur": {
+      "accuracy": 68.122,
+      "calibration_error": 0.04946361854672432
+    },
+    "snow": {
+      "accuracy": 58.754,
+      "calibration_error": 0.04878072068095207
+    },
+    "frost": {
+      "accuracy": 57.7,
+      "calibration_error": 0.041169002652168274
+    },
+    "fog": {
+      "accuracy": 54.906,
+      "calibration_error": 0.0350155383348465
+    },
+    "brightness": {
+      "accuracy": 68.77,
+      "calibration_error": 0.06373441219329834
+    },
+    "contrast": {
+      "accuracy": 64.804,
+      "calibration_error": 0.05872982740402222
+    },
+    "elastic_transform": {
+      "accuracy": 61.636,
+      "calibration_error": 0.057460103183984756
+    },
+    "pixelate": {
+      "accuracy": 44.574,
+      "calibration_error": 0.0353340320289135
+    },
+    "jpeg_compression": {
+      "accuracy": 54.126,
+      "calibration_error": 0.02179446443915367
+    },
+    "speckle_noise": {
+      "accuracy": 47.996,
+      "calibration_error": 0.008051595650613308
+    },
+    "gaussian_blur": {
+      "accuracy": 68.532,
+      "calibration_error": 0.05176015943288803
+    },
+    "saturate": {
+      "accuracy": 65.342,
+      "calibration_error": 0.051716599613428116
+    },
+    "spatter": {
+      "accuracy": 65.162,
+      "calibration_error": 0.06284890323877335
+    }
+  },
+  "aggregates": {
+    "mean_accuracy": 57.98884210526316,
+    "mean_calibration_error": 0.0388515803864912,
+    "min_accuracy": 41.24,
+    "max_accuracy": 68.77,
+    "std_accuracy": 8.67810222561518,
+    "accuracy_noise": 47.13400000000001,
+    "accuracy_blur": 62.021,
+    "accuracy_weather": 60.0325,
+    "accuracy_digital": 56.285000000000004,
+    "accuracy_c15": 56.983733333333326,
+    "accuracy_c19": 57.98884210526316
+  }
+}

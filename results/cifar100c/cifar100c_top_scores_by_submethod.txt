@@ -1,0 +1,170 @@
+CIFAR-100-C Top Scores by Method and Sub-Method
+================================================
+
+This file shows the best performing variant for each augmentation sub-method
+across all SSL methods (BYOL, DINO, SimCLR).
+
+================================================================================
+BYOL - Top Score per Augmentation Type
+================================================================================
+
+Sub-Method: TrivialAug
+  Best: byol_cifar_trivaug2_eh66qcpw
+  Mean Accuracy = 57.98884210526316%
+  Mean ECE = 0.0388515803864912
+
+Sub-Method: RandAug
+  Best: byol_cifar_randaug_coloraug_j0kljjpa
+  Mean Accuracy = 52.157684210526305%
+  Mean ECE = 0.06126974307392773
+
+Sub-Method: Style Transfer
+  Best: byol_cifar_styletrans30per_bwc2mfqk
+  Mean Accuracy = 51.69726315789474%
+  Mean ECE = 0.07505564612189405
+
+Sub-Method: Solo (Baseline)
+  Best: byol_cifar_solo_pjx5quld
+  Mean Accuracy = 43.83252631578948%
+  Mean ECE = 0.10347841547704056
+
+BYOL Summary:
+  1st Place: TrivialAug (57.99%)
+  2nd Place: RandAug (52.16%)
+  3rd Place: Style Transfer (51.70%)
+  4th Place: Solo (43.83%)
+  
+  Performance Gap (Best to Worst): 14.16 percentage points
+  TrivialAug advantage over Style Transfer: 6.29pp
+
+
+================================================================================
+DINO - Top Score per Augmentation Type
+================================================================================
+
+Sub-Method: Style Transfer
+  Best: dino_cifar_styletrans10per_5jcaa3al
+  Mean Accuracy = 36.45252631578947%
+  Mean ECE = 0.11250228807330132
+
+Sub-Method: Solo (Baseline)
+  Best: dino_cifar_solo_sqhjdez6
+  Mean Accuracy = 36.961052631578944%
+  Mean ECE = 0.12646765041312105
+
+Sub-Method: TrivialAug
+  Best: dino_cifar_trivaug_ltba17gn
+  Mean Accuracy = 34.0401052631579%
+  Mean ECE = 0.11229534819722176
+
+Sub-Method: RandAug
+  Best: dino_cifar_randaug_a42qt5eq
+  Mean Accuracy = 32.76505263157895%
+  Mean ECE = 0.134167575522473
+
+DINO Summary:
+  1st Place: Solo (36.96%)
+  2nd Place: Style Transfer (36.45%)
+  3rd Place: TrivialAug (34.04%)
+  4th Place: RandAug (32.77%)
+  
+  Performance Gap (Best to Worst): 4.19 percentage points
+  NOTE: DINO performs worse overall and shows minimal gains from augmentation
+
+
+================================================================================
+SimCLR - Top Score per Augmentation Type
+================================================================================
+
+Sub-Method: TrivialAug
+  Best: simclr_cifar_trivaug_coloraug_owpioiua
+  Mean Accuracy = 56.523999999999994%
+  Mean ECE = 0.028039372624143175
+
+Sub-Method: Style Transfer
+  Best: simclr_cifar_styletrans10per_vjrmtssy
+  Mean Accuracy = 54.94936842105262%
+  Mean ECE = 0.03344744438991735
+
+Sub-Method: RandAug
+  Best: simclr_cifar_randaug_coloraug_h0h9zfls
+  Mean Accuracy = 54.58505263157896%
+  Mean ECE = 0.03202511507429575
+
+Sub-Method: Solo (Baseline)
+  Best: simclr_cifar_solo_ag4ufm8r
+  Mean Accuracy = 51.729894736842105%
+  Mean ECE = 0.04047726800567225
+
+SimCLR Summary:
+  1st Place: TrivialAug (56.52%)
+  2nd Place: Style Transfer (54.95%)
+  3rd Place: RandAug (54.59%)
+  4th Place: Solo (51.73%)
+  
+  Performance Gap (Best to Worst): 4.79 percentage points
+  TrivialAug advantage over Style Transfer: 1.57pp
+
+
+================================================================================
+CROSS-METHOD COMPARISON - Top Score per Sub-Method
+================================================================================
+
+TrivialAug (Best Overall Performer):
+  1. BYOL: 57.99% (byol_cifar_trivaug2_eh66qcpw)
+  2. SimCLR: 56.52% (simclr_cifar_trivaug_coloraug_owpioiua)
+  3. DINO: 34.04% (dino_cifar_trivaug_ltba17gn)
+  Average: 49.52%
+  Gap (BYOL - DINO): 23.95pp
+
+RandAug:
+  1. BYOL: 52.16% (byol_cifar_randaug_coloraug_j0kljjpa)
+  2. SimCLR: 54.59% (simclr_cifar_randaug_coloraug_h0h9zfls)
+  3. DINO: 32.77% (dino_cifar_randaug_a42qt5eq)
+  Average: 46.51%
+  Gap (SimCLR - DINO): 21.82pp
+
+Style Transfer:
+  1. BYOL: 51.70% (byol_cifar_styletrans30per_bwc2mfqk)
+  2. SimCLR: 54.95% (simclr_cifar_styletrans10per_vjrmtssy)
+  3. DINO: 36.45% (dino_cifar_styletrans10per_5jcaa3al)
+  Average: 47.70%
+  Gap (SimCLR - DINO): 18.50pp
+
+Solo (Baseline):
+  1. BYOL: 43.83% (byol_cifar_solo_pjx5quld)
+  2. SimCLR: 51.73% (simclr_cifar_solo_ag4ufm8r)
+  3. DINO: 36.96% (dino_cifar_solo_sqhjdez6)
+  Average: 44.17%
+  Gap (SimCLR - DINO): 14.77pp
+
+
+================================================================================
+KEY INSIGHTS
+================================================================================
+
+1. TrivialAug Dominates:
+   - Consistently best across all three SSL methods
+   - BYOL TrivialAug (57.99%) is the single best model overall
+   - 14.16pp improvement over BYOL Solo baseline
+
+2. Method-Specific Differences:
+   - BYOL: Strong with all augmentations, 14.16pp gap to baseline
+   - SimCLR: Balanced performance, 4.79pp gap to baseline
+   - DINO: Poor robustness, minimal augmentation benefit (4.19pp gap)
+
+3. Style Transfer Performance:
+   - Competitive with RandAug across methods
+   - Best for SimCLR (54.95%)
+   - Worse for DINO compared to baseline solo
+   - Calibration trade-off: higher ECE than TrivialAug
+
+4. Augmentation Benefit Ranking (by average improvement):
+   1. TrivialAug: +5.35pp over baseline
+   2. RandAug: +2.34pp over baseline
+   3. Style Transfer: +3.53pp over baseline
+
+5. DINO Anomaly:
+   - All augmentations show minimal or negative effects
+   - Solo baseline competitive with augmented variants
+   - Suggests DINO may require different training regime or architecture tuning
